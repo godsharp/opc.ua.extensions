@@ -4,7 +4,7 @@
     "continuous",
     GitHubActionsImage.WindowsLatest,
     AutoGenerate = true,
-    PublishArtifacts = false,
+    PublishArtifacts = true,
     // On = new[] { GitHubActionsTrigger.Push },
     OnPushBranches = new[] { "main" },
     InvokedTargets = new[] { nameof(Deploy) },

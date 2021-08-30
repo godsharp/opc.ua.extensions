@@ -66,13 +66,10 @@ partial class Build : NukeBuild
         .Description("Clean Solution")
         .Executes(() =>
         {
-            if(OperatingSystem.IsWindows())
-            {
-                SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-                OutputDirectory.GlobDirectories("*").ForEach(DeleteDirectory);
-                DeleteDirectory(OutputDirectory);
-                DeleteDirectory(ArtifactsDirectory);
-            }
+            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+            OutputDirectory.GlobDirectories("*").ForEach(DeleteDirectory);
+            DeleteDirectory(OutputDirectory);
+            DeleteDirectory(ArtifactsDirectory);
         });
 
     Target Restore => _ => _
@@ -133,12 +130,9 @@ partial class Build : NukeBuild
         //.Requires(() => MyGetApiKey)
         .Executes(() =>
         {
-            if (HostType == HostType.AzurePipelines)
-            {
-                Logger.Info("Push nuget package to server...");
-                GlobFiles(ArtifactsDirectory, "**/*.nupkg").ForEach(Nuget);
-                Logger.Info("Push nuget package to server finished.");
-            }
+            Logger.Info("Push nuget package to server...");
+            GlobFiles(ArtifactsDirectory, "**/*.nupkg").ForEach(Nuget);
+            Logger.Info("Push nuget package to server finished.");
         });
 
     Target Deploy => _ => _
