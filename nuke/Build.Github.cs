@@ -8,7 +8,7 @@
     // On = new[] { GitHubActionsTrigger.Push },
     OnPushBranches = new[] { "main" },
     InvokedTargets = new[] { nameof(Deploy) },
-    ImportSecrets = new[] { nameof(GhAccessToken) },
+    ImportSecrets = new[] { nameof(GhAccessToken),nameof(NuGetApiKey),nameof(MyGetApiKey) },
     CacheKeyFiles = new string[0]
 )]
 [GitHubActions(
