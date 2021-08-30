@@ -33,10 +33,13 @@ partial class Build : NukeBuild
     [Parameter("Api key to push packages to nuget.org.")] 
     [Secret]
     string NuGetApiKey;
-    [Parameter("Api key to push packages to myget.org.")] 
+    [Parameter("Api key to push packages to myget.org.")]
     [Secret]
     string MyGetApiKey;
-    
+    [Parameter("Github personal access token.")]
+    [Secret]
+    string GhAccessToken;
+
     [Solution] readonly Solution Solution;
     //[GitRepository] readonly GitRepository GitRepository;
     //[GitVersion(Framework = "net5.0", NoFetch = true)] readonly GitVersion GitVersion;
@@ -48,21 +51,28 @@ partial class Build : NukeBuild
     AbsolutePath OutputDirectory => RootDirectory / "output";
     AbsolutePath ArtifactsDirectory => RootDirectory / "artifacts";
 
+    HostType HostType = HostType.None;
+
     protected override void OnBuildInitialized()
     {
         base.OnBuildInitialized();
         NuGetApiKey ??= Environment.GetEnvironmentVariable(nameof(NuGetApiKey));
         MyGetApiKey ??= Environment.GetEnvironmentVariable(nameof(MyGetApiKey));
+        GhAccessToken ??= Environment.GetEnvironmentVariable(nameof(GhAccessToken));
+        Enum.TryParse(Host.Instance.GetType().Name, true, out HostType);
     }
     
     Target Clean => _ => _
         .Description("Clean Solution")
         .Executes(() =>
         {
-            SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-            //OutputDirectory.GlobDirectories("*").ForEach(DeleteDirectory);
-            //DeleteDirectory(OutputDirectory);
-            DeleteDirectory(ArtifactsDirectory);
+            if(OperatingSystem.IsWindows())
+            {
+                SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
+                OutputDirectory.GlobDirectories("*").ForEach(DeleteDirectory);
+                DeleteDirectory(OutputDirectory);
+                DeleteDirectory(ArtifactsDirectory);
+            }
         });
 
     Target Restore => _ => _
@@ -106,23 +116,29 @@ partial class Build : NukeBuild
         .Description("Upload Artifacts")
         .Executes(() =>
         {
-            Logger.Info("Upload artifacts to azure...");
-            AzurePipelines
-                .UploadArtifacts("artifacts", "artifacts", ArtifactsDirectory);
-            Logger.Info("Upload artifacts to azure finished.");
+            if (HostType == HostType.AzurePipelines)
+            {
+                Logger.Info("Upload artifacts to azure...");
+                AzurePipelines
+                    .UploadArtifacts("artifacts", "artifacts", ArtifactsDirectory);
+                Logger.Info("Upload artifacts to azure finished."); 
+            }
         });
 
     Target Push => _ => _
         .Description("Push NuGet Package")
         .DependsOn(Pack)
         .OnlyWhenStatic(() => IsServerBuild, () => Configuration.Equals(Configuration.Release))
-        .Requires(() => NuGetApiKey)
-        .Requires(() => MyGetApiKey)
+        //.Requires(() => NuGetApiKey)
+        //.Requires(() => MyGetApiKey)
         .Executes(() =>
         {
-            Logger.Info("Upload artifacts to azure...");
-            GlobFiles(ArtifactsDirectory, "**/*.nupkg").ForEach(Nuget);
-            Logger.Info("Upload artifacts to azure finished.");
+            if (HostType == HostType.AzurePipelines)
+            {
+                Logger.Info("Push nuget package to server...");
+                GlobFiles(ArtifactsDirectory, "**/*.nupkg").ForEach(Nuget);
+                Logger.Info("Push nuget package to server finished.");
+            }
         });
 
     Target Deploy => _ => _
@@ -135,8 +151,14 @@ partial class Build : NukeBuild
     
     void Nuget(string x)
     {
-        Nuget(x, "https://api.nuget.org/v3/index.json", NuGetApiKey);
-        Nuget(x, "https://www.myget.org/F/godsharp/api/v2/package", MyGetApiKey);
+        if (NuGetApiKey != null) 
+            Nuget(x, "https://api.nuget.org/v3/index.json", NuGetApiKey);
+
+        if (MyGetApiKey != null) 
+            Nuget(x, "https://www.myget.org/F/godsharp/api/v2/package", MyGetApiKey);
+
+        if (HostType == HostType.GitHubActions && GhAccessToken != null)
+            Nuget(x, "https://nuget.pkg.github.com/godsharp/index.json", GhAccessToken);
     }
 
     void Nuget(string x, string source, string key) =>
