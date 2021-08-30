@@ -60,8 +60,8 @@ partial class Build : NukeBuild
         .Executes(() =>
         {
             SourceDirectory.GlobDirectories("**/bin", "**/obj").ForEach(DeleteDirectory);
-            OutputDirectory.GlobDirectories("*").ForEach(DeleteDirectory);
-            DeleteDirectory(OutputDirectory);
+            //OutputDirectory.GlobDirectories("*").ForEach(DeleteDirectory);
+            //DeleteDirectory(OutputDirectory);
             DeleteDirectory(ArtifactsDirectory);
         });
 
