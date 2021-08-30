@@ -1,0 +1,23 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Common.props" />
+
+  <PropertyGroup>
+    <!--<TargetFramework>netcoreapp3.1</TargetFramework>-->
+    <TargetFrameworks>net46;net461;net48;netcoreapp3.1;net5.0;</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <!--<ItemGroup>
+    <Compile Remove="Shared\*.uamgen.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Shared\*.uamgen.cs" />
+  </ItemGroup>-->
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\GodSharp.Extensions.Opc.Ua.CodeGenerator\GodSharp.Extensions.Opc.Ua.CodeGenerator.csproj" />
+    <ProjectReference Include="..\CommonTest\CommonTest.csproj" />
+  </ItemGroup>
+
+</Project>

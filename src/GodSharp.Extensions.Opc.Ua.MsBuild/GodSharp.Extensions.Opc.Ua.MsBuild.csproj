@@ -1,0 +1,36 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Common.props" />
+
+  <PropertyGroup>
+    <!--<TargetFramework>net46</TargetFramework>-->
+    <TargetFrameworks>net46;net472;netstandard2.0;</TargetFrameworks>
+    <LangVersion>latestmajor</LangVersion>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IncludeBuildOutput>false</IncludeBuildOutput>
+    <NoPackageAnalysis>true</NoPackageAnalysis>
+    <DevelopmentDependency>true</DevelopmentDependency>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
+    <SuppressDependenciesWhenPacking>true</SuppressDependenciesWhenPacking>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Build.Utilities.Core" Version="14.3.0" />
+    <ProjectReference Include="..\GodSharp.Extensions.Opc.Ua.CodeGenerator\GodSharp.Extensions.Opc.Ua.CodeGenerator.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- MSBuild and dependencies only acquired through MSBuild shall not make it into the final package -->
+    <PackageReference Update="@(PackageReference)" PrivateAssets="All" />
+    <PackageReference Update="@(ProjectReference)" PrivateAssets="All" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove="build\GodSharp.Extensions.Opc.Ua.MsBuild.targets" />
+    <None Remove="buildMultiTargeting\GodSharp.Extensions.Opc.Ua.MsBuild.targets" />
+    <Content Include="build\GodSharp.Extensions.Opc.Ua.MsBuild.targets" PackagePath="build">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="buildMultiTargeting\GodSharp.Extensions.Opc.Ua.MsBuild.targets" PackagePath="buildMultiTargeting" />
+    <_PackageFiles Include="$(OutputPath)**\*.dll" PackagePath="build" />
+  </ItemGroup>
+</Project>

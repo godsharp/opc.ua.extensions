@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+    <PropertyGroup Condition="'$(TargetFramework)'=='net35'">
+        <DefineConstants>NFX;NET35;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net40'">
+        <DefineConstants>NFX;NET40;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net45'">
+        <DefineConstants>NFX;NET45;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net451'">
+        <DefineConstants>NFX;NET451;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net452'">
+        <DefineConstants>NFX;NET452;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net46'">
+        <DefineConstants>NFX;NET46;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net461'">
+        <DefineConstants>NFX;NET461;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net462'">
+        <DefineConstants>NFX;NET462;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net47'">
+        <DefineConstants>NFX;NET47;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net471'">
+        <DefineConstants>NFX;NET471;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net472'">
+        <DefineConstants>NFX;NET472;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net48'">
+        <DefineConstants>NFX;NET48;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.1'">
+        <DefineConstants>NSD;NETSTANDARD11;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.3'">
+        <DefineConstants>NSD;NETSTANDARD13;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='netstandard1.6'">
+        <DefineConstants>NSD;NETSTANDARD16;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.0'">
+        <DefineConstants>NSD;NETSTANDARD20;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='netstandard2.1'">
+        <DefineConstants>NSD;NETSTANDARD21;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp1.1'">
+        <DefineConstants>NFC;NETCOREAPP11;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.0'">
+        <DefineConstants>NFC;NETCOREAPP20;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.1'">
+        <DefineConstants>NFC;NETCOREAPP21;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp2.2'">
+        <DefineConstants>NFC;NETCOREAPP22;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.0'">
+        <DefineConstants>NFC;NETCOREAPP30;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='netcoreapp3.1'">
+        <DefineConstants>NFC;NETCOREAPP31;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net5.0'">
+        <DefineConstants>NFC;NET50;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(TargetFramework)'=='net6.0'">
+        <DefineConstants>NFC;NET60;$(AdditionalConstants)</DefineConstants>
+    </PropertyGroup>
+</Project>

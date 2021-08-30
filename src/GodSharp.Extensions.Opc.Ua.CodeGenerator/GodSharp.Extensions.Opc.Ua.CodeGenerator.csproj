@@ -1,0 +1,33 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Common.props" />
+
+  <PropertyGroup>
+    <!--<TargetFramework>net46</TargetFramework>-->
+    <TargetFrameworks>net46;net472;netstandard2.0;</TargetFrameworks>
+    <LangVersion>latestmajor</LangVersion>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <!-- Generates a package at build -->
+    <IncludeBuildOutput>true</IncludeBuildOutput>
+    <!--<CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>-->
+    <IsPack>false</IsPack>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net46'">
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="[2.6.0,2.9.8]" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="[2.6.0,2.9.8]" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net472'">
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="[3.0.0,)" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="[3.0.0,)" />
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.CodeAnalysis.Analyzers" Version="[3.0.0,)" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="[3.0.0,)" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\GodSharp.Extensions.Opc.Ua.Generator\GodSharp.Extensions.Opc.Ua.Generator.csproj" />
+  </ItemGroup>
+</Project>

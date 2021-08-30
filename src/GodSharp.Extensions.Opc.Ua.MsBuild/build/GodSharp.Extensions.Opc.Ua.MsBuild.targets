@@ -1,0 +1,16 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <OpcUaComplexTypesBuildDebug Condition="'$(OpcUaComplexTypesBuildDebug)' == ''">false</OpcUaComplexTypesBuildDebug>
+    <OpcUaComplexTypesBuildAssembly Condition="'$(OpcUaComplexTypesBuildAssembly)' == '' and '$(OpcUaComplexTypesBuildDebug)' == 'false'">$(MSBuildThisFileDirectory)$(TargetFramework)\$(MSBuildThisFileName).dll</OpcUaComplexTypesBuildAssembly>
+    <OpcUaComplexTypesBuildAssembly Condition="'$(OpcUaComplexTypesBuildAssembly)' == '' and '$(OpcUaComplexTypesBuildDebug)' == 'true'">$(MSBuildThisFileDirectory)..\$(MSBuildThisFileName).dll</OpcUaComplexTypesBuildAssembly>
+  </PropertyGroup>
+  <UsingTask Condition="'$(OpcUaComplexTypesBuildAssembly)' != ''" TaskName="OpcUaComplexTypesBuildTask" AssemblyFile="$(OpcUaComplexTypesBuildAssembly)"/>
+
+  <Target Name="OpcUaComplexTypesBuildTask" BeforeTargets="CoreCompile" Condition="'$(OpcUaComplexTypesBuildAssembly)' != ''">
+    <Message Text="OpcUaComplexTypesBuildTaskAssembly:'$(OpcUaComplexTypesBuildAssembly)'" Importance="high" />
+    <Message Text="OpcUaComplexTypesBuildTaskProjectPath:'$(MSBuildProjectDirectory)'" Importance="high" />
+    <Message Text="OpcUaComplexTypesBuildTaskDebug:'$(OpcUaComplexTypesBuildDebug)'" Importance="high" />
+    <OpcUaComplexTypesBuildTask ProjectPath="$(MSBuildProjectDirectory)"/>
+  </Target>
+</Project>

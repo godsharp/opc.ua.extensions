@@ -1,0 +1,41 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="..\..\Common.props" />
+
+  <PropertyGroup>
+    <!--<TargetFramework>netcoreapp3.1</TargetFramework>-->
+    <!--<TargetFramework>net5.0</TargetFramework>-->
+    <TargetFrameworks>net46;net461;net48;netcoreapp3.1;net5.0;</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+    <OpcUaComplexTypesBuildDebug>true</OpcUaComplexTypesBuildDebug>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461'">
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client.ComplexTypes">
+      <Version>[1.4.360.33]</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net48' or '$(TargetFramework)' == 'net5.0' or '$(TargetFramework)' == 'netcoreapp3.1'">
+    <PackageReference Include="OPCFoundation.NetStandard.Opc.Ua.Client.ComplexTypes">
+      <Version>1.4.363.107</Version>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\GodSharp.Extensions.Opc.Ua.CodeGenerator\GodSharp.Extensions.Opc.Ua.CodeGenerator.csproj" />
+    <ProjectReference Include="..\..\src\GodSharp.Extensions.Opc.Ua.Generator\GodSharp.Extensions.Opc.Ua.Generator.csproj" />
+    <ProjectReference Include="..\CommonTest\CommonTest.csproj" />
+    <ProjectReference Include="..\..\src\GodSharp.Extensions.Opc.Ua.MsBuild\GodSharp.Extensions.Opc.Ua.MsBuild.csproj" PrivateAssets="All" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Update="GodSharp.OpcUaExtensions.Client.Config.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  
+  <Import Condition="('$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461') AND Exists('..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\net46\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets')" Project="..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\net46\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets" />
+  <Import Condition="'$(TargetFramework)'=='net48' AND Exists('..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\net472\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets')" Project="..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\net472\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets" />
+  <Import Condition="('$(TargetFramework)'=='net5.0' OR '$(TargetFramework)'=='netcoreapp3.1') AND Exists('..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\netstandard2.0\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets')" Project="..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\netstandard2.0\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets" />
+
+</Project>

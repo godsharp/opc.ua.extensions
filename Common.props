@@ -1,0 +1,25 @@
+﻿<Project>
+  <Import Project=".\Version.props"/>
+  <!--<Import Project="$([MSBuild]::GetPathOfFileAbove('Directory.Build.props', '$(MSBuildThisFileDirectory)../'))" />-->
+  <PropertyGroup>
+    <LangVersion>latest</LangVersion>
+    <NoWarn>$(NoWarn);1574;1591</NoWarn>
+    <DebugSymbols>true</DebugSymbols>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/godsharp/OpcUaExtensions.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/godsharp/OpcUaExtensions</PackageProjectUrl>
+    <PackageIcon>icon.png</PackageIcon>
+    <Company>GodSharp</Company>
+    <Authors>seayxu</Authors>
+    <Copyright>Copyright © GodSharp 2021</Copyright>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <SatelliteResourceLanguages>None</SatelliteResourceLanguages>
+    <OutputPath>$(MSBuildThisFileDirectory)output\$(AssemblyName)\</OutputPath>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+    <IsPack>false</IsPack>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)icon.png" Pack="true" Visible="false" PackagePath="" />
+  </ItemGroup>
+</Project>
