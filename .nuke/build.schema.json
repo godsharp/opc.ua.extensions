@@ -38,10 +38,13 @@
             "GitHubActions",
             "GitLab",
             "Jenkins",
+            "Rider",
             "SpaceAutomation",
             "TeamCity",
             "Terminal",
-            "TravisCI"
+            "TravisCI",
+            "VisualStudio",
+            "VSCode"
           ]
         },
         "MyGetApiKey": {
@@ -57,6 +60,10 @@
           "type": "string",
           "description": "Api key to push packages to nuget.org",
           "default": "Secrets must be entered via 'nuke :secret [profile]'"
+        },
+        "Partition": {
+          "type": "string",
+          "description": "Partition to use on CI"
         },
         "Plan": {
           "type": "boolean",
