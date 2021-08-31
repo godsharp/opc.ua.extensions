@@ -3,7 +3,7 @@
     <Version>2021.308.1.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(AssemblyName)'=='GodSharp.Extensions.Opc.Ua'">
-    <IsPack>true</IsPack>
+    <IsPack>false</IsPack>
     <Version>2021.308.1.0</Version>
 </PropertyGroup>
   <PropertyGroup Condition="'$(AssemblyName)'=='GodSharp.Extensions.Opc.Ua.Client'">

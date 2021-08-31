@@ -151,8 +151,8 @@ partial class Build : NukeBuild
         if (MyGetApiKey != null) 
             Nuget(x, "https://www.myget.org/F/godsharp/api/v2/package", MyGetApiKey);
 
-        if (HostType == HostType.GitHubActions && GhAccessToken != null)
-            Nuget(x, "https://nuget.pkg.github.com/godsharp/index.json", GhAccessToken);
+        //if (HostType == HostType.GitHubActions && GhAccessToken != null)
+        //    Nuget(x, "https://nuget.pkg.github.com/godsharp/index.json", GhAccessToken);
     }
 
     void Nuget(string x, string source, string key) =>
