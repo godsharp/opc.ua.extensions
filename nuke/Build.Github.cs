@@ -1,4 +1,8 @@
-﻿using Nuke.Common.CI.GitHubActions;
+﻿using Nuke.Common;
+using Nuke.Common.CI.GitHubActions;
+using Nuke.Common.Tools.GitReleaseManager;
+
+using static Nuke.Common.Tools.GitReleaseManager.GitReleaseManagerTasks;
 
 [GitHubActions(
     "continuous",
@@ -25,4 +29,11 @@
 )]
 partial class Build
 {
+    Target Release => _ => _
+        .Description("Release")
+        .Executes(() =>
+        {
+            GitReleaseManagerCreate(new Nuke.Common.Tools.GitReleaseManager.GitReleaseManagerCreateSettings());
+            //GitReleaseManagerAddAssets( )
+        });
 }

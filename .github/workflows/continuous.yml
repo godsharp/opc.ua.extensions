@@ -33,3 +33,7 @@ jobs:
           GhAccessToken: ${{ secrets.GH_ACCESS_TOKEN }}
           NuGetApiKey: ${{ secrets.NUGET_API_KEY }}
           MyGetApiKey: ${{ secrets.MY_GET_API_KEY }}
+      - uses: actions/upload-artifact@v1
+        with:
+          name: artifacts
+          path: artifacts

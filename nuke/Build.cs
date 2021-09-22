@@ -109,6 +109,8 @@ partial class Build : NukeBuild
 
     Target Artifacts => _ => _
         .DependsOn(Pack)
+        // Supported for TeamCity, Azure Pipelines, AppVeyor, GitHub Actions.
+        .Produces(ArtifactsDirectory)
         .OnlyWhenStatic(() => IsServerBuild, () => Configuration.Equals(Configuration.Release))
         .Description("Upload Artifacts")
         .Executes(() =>

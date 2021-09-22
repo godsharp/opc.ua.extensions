@@ -45,9 +45,9 @@ namespace OpcUaTest
             var opc = new OpcUaSession(_server);
             opc.Connect();
 
-            //new ComplexTypeSystem(opc.Session)?.Load().Wait();
-            OptionalFieldsReadWriteTest(opc.Session);
-            //OptionSetReadWriteTest(opc.Session);
+            new ComplexTypeSystem(opc.Session)?.Load().Wait();
+            //OptionalFieldsReadWriteTest(opc.Session);
+            OptionSetReadWriteTest(opc.Session);
             //EnumArrayReadWriteTest(opc.Session);
             //EnumReadWriteTest(opc.Session);
             //LongArrayReadWriteTest(opc.Session);
@@ -176,7 +176,7 @@ namespace OpcUaTest
 
         public void OptionSetReadWriteTest(Session session)
         {
-            var node = "ns=4;Demo.Static.Scalar.OptionSet";
+            var node = "ns=4;s=Demo.Static.Scalar.OptionSet";
 
             //(EnumDefinition)decoder.ReadEncodeable("EnumDefinition", typeof(EnumDefinition));
 
