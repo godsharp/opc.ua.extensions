@@ -161,5 +161,7 @@ partial class Build : NukeBuild
         DotNetNuGetPush(s => s
             .SetTargetPath(x)
             .SetSource(source)
-            .SetApiKey(key));
+            .SetApiKey(key)
+            .SetSkipDuplicate(true)
+        );
 }
