@@ -77,8 +77,7 @@ namespace GodSharp.Extensions.Opc.Ua.CodeGenerator
         /// <param name="type"></param>
         public static void BuildType(StringBuilder builder, CodeGeneratorMetadataType type)
         {
-
-            builder.AppendLine($"\t{type.Accessibility} class {type.ClassName} : ComplexObject");
+            builder.AppendLine($"\t{type.Accessibility} class {type.ClassName}{type.Class.TypeParameterList?.ToString()} : ComplexObject {type.Class.ConstraintClauses.ToString()}");
             builder.AppendLine("\t{");
 
             AppendField(builder, type.ObjectType);
@@ -331,6 +330,7 @@ namespace GodSharp.Extensions.Opc.Ua.CodeGenerator
                 CodeGeneratorMetadataType metadataType = new()
                 {
                     Accessibility = cls.Modifiers.ToString(),
+                    Class = cls,
                     ClassName = cls.Identifier.ToString(),
                     ObjectType= objectType,
                     MethodType = methodType,

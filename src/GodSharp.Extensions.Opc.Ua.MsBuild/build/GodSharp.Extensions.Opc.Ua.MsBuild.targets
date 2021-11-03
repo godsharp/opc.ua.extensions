@@ -2,10 +2,24 @@
 
   <PropertyGroup>
     <OpcUaComplexTypesBuildDebug Condition="'$(OpcUaComplexTypesBuildDebug)' == ''">false</OpcUaComplexTypesBuildDebug>
-    
-    <OpcUaComplexTypesBuildCore Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(MSBuildRuntimeType)' == 'Core'">true</OpcUaComplexTypesBuildCore>
-    <OpcUaComplexTypesBuild46 Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(MSBuildRuntimeType)' != 'Core' and ('$(TargetFramework)' == 'net46' or '$(TargetFramework)' == 'net461' or '$(TargetFramework)' == 'net462' or '$(TargetFramework)' == 'net47' or '$(TargetFramework)' == 'net471')">true</OpcUaComplexTypesBuild46>
-    <OpcUaComplexTypesBuild472 Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(MSBuildRuntimeType)' != 'Core' and ('$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'net48')">true</OpcUaComplexTypesBuild472>
+
+    <OpcUaComplexTypesBuildCore Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == 'netstandard2.0'">true</OpcUaComplexTypesBuildCore>
+    <OpcUaComplexTypesBuildCore Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == 'netstandard2.1'">true</OpcUaComplexTypesBuildCore>
+    <OpcUaComplexTypesBuildCore Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == 'netcoreapp2.0'">true</OpcUaComplexTypesBuildCore>
+    <OpcUaComplexTypesBuildCore Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == 'netcoreapp2.1'">true</OpcUaComplexTypesBuildCore>
+    <OpcUaComplexTypesBuildCore Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == 'netcoreapp2.2'">true</OpcUaComplexTypesBuildCore>
+    <OpcUaComplexTypesBuildCore Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == 'netcoreapp3.0'">true</OpcUaComplexTypesBuildCore>
+    <OpcUaComplexTypesBuildCore Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == 'netcoreapp3.1'">true</OpcUaComplexTypesBuildCore>
+    <OpcUaComplexTypesBuildCore Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == 'net5.0'">true</OpcUaComplexTypesBuildCore>
+    <OpcUaComplexTypesBuildCore Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == 'net6.0'">true</OpcUaComplexTypesBuildCore>
+
+    <OpcUaComplexTypesBuild46 Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == 'net46'">true</OpcUaComplexTypesBuild46>
+    <OpcUaComplexTypesBuild46 Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == 'net461'">true</OpcUaComplexTypesBuild46>
+    <OpcUaComplexTypesBuild46 Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == 'net462'">true</OpcUaComplexTypesBuild46>
+    <OpcUaComplexTypesBuild46 Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == 'net47'">true</OpcUaComplexTypesBuild46>
+    <OpcUaComplexTypesBuild46 Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == 'net471'">true</OpcUaComplexTypesBuild46>
+    <OpcUaComplexTypesBuild472 Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == '472'">true</OpcUaComplexTypesBuild472>
+    <OpcUaComplexTypesBuild472 Condition="'$(OpcUaComplexTypesBuildDebug)' != 'true' and '$(TargetFramework)' == '48'">true</OpcUaComplexTypesBuild472>
     
     <OpcUaComplexTypesBuildAssembly Condition="'$(OpcUaComplexTypesBuildCore)' == 'true'">$(MSBuildThisFileDirectory)netstandard2.0\$(MSBuildThisFileName).dll</OpcUaComplexTypesBuildAssembly>
     <OpcUaComplexTypesBuildAssembly Condition="'$(OpcUaComplexTypesBuild46)' == 'true'">$(MSBuildThisFileDirectory)net46\$(MSBuildThisFileName).dll</OpcUaComplexTypesBuildAssembly>

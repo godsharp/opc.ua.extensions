@@ -12,7 +12,7 @@ using static GodSharp.Extensions.Opc.Ua.Types.Encodings.EncodingFactory;
 
 namespace CodeGeneratorMsBuildTest
 {
-	public partial class WorkOrder : ComplexObject
+	public partial class WorkOrder : ComplexObject 
 	{
 		public override void Encode(IEncoder encoder)
 		{
@@ -33,7 +33,7 @@ namespace CodeGeneratorMsBuildTest
 		}
 	}
 
-	public partial class WorkOrderStatus : ComplexObject
+	public partial class WorkOrderStatus : ComplexObject 
 	{
 		public override void Encode(IEncoder encoder)
 		{

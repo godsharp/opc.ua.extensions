@@ -13,7 +13,7 @@ namespace GodSharp.Extensions.Opc.Ua.CodeGenerator
             foreach (var file in files)
             {
                 if (file.Contains("\\obj\\")) continue;
-                if (file.EndsWith(Header)) continue;
+                if (file.EndsWith(Suffix)) continue;
                 generator.Build(ParseFile(file));
             }
         }

@@ -18,12 +18,12 @@
     <Version>2021.309.1.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(AssemblyName)'=='GodSharp.Extensions.Opc.Ua.CodeGenerator'">
-    <IsPackable>false</IsPackable>
-    <IsPack>false</IsPack>
-    <Version>2021.309.1.0</Version>
+    <IsPackable>true</IsPackable>
+    <IsPack>true</IsPack>
+    <Version>2021.411.3.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(AssemblyName)'=='GodSharp.Extensions.Opc.Ua.MsBuild'">
     <IsPackable>true</IsPackable>
-    <Version>2021.411.3.2</Version>
+    <Version>2021.411.3.3</Version>
   </PropertyGroup>
 </Project>

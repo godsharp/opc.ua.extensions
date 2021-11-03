@@ -8,10 +8,13 @@
 using GodSharp.Extensions.Opc.Ua.Types;
 using Opc.Ua;
 using static GodSharp.Extensions.Opc.Ua.Types.Encodings.EncodingFactory;
+using GodSharp.Extensions.Opc.Ua.Utilities;
+using System.Linq.Expressions;
+using System;
 
 namespace CodeGeneratorTest
 {
-	public partial class OptionalFields : ComplexObject
+	public partial class OptionalFields : ComplexObject 
 	{
 		public uint EncodingMask;
 
@@ -20,12 +23,12 @@ namespace CodeGeneratorTest
 			base.Encode(encoder);
 			encoder.WriteUInt32("EncodingMask",EncodingMask);
 			Encoding.Write(encoder,MandatoryInt32, nameof(MandatoryInt32));
-			if ((1 & EncodingMask) != 0)
+			if ((0b0001 & EncodingMask) != 0)
 			{
 				Encoding.Write(encoder,OptionalInt32, nameof(OptionalInt32));
 			}
 			Encoding.Write(encoder,MandatoryStringArray, nameof(MandatoryStringArray));
-			if ((2 & EncodingMask) != 0)
+			if ((0b0010 & EncodingMask) != 0)
 			{
 				Encoding.Write(encoder,OptionalStringArray, nameof(OptionalStringArray));
 			}
@@ -36,15 +39,103 @@ namespace CodeGeneratorTest
 			base.Decode(decoder);
 			EncodingMask = decoder.ReadUInt32("EncodingMask");
 			Encoding.Read(decoder,ref MandatoryInt32, nameof(MandatoryInt32));
-			if ((1 & EncodingMask) != 0)
+			if ((0b0001 & EncodingMask) != 0)
 			{
 				Encoding.Read(decoder,ref OptionalInt32, nameof(OptionalInt32));
 			}
 			Encoding.Read(decoder,ref MandatoryStringArray, nameof(MandatoryStringArray));
-			if ((2 & EncodingMask) != 0)
+			if ((0b0010 & EncodingMask) != 0)
 			{
 				Encoding.Read(decoder,ref OptionalStringArray, nameof(OptionalStringArray));
 			}
+		}
+
+		public OptionalFields ResetMask()
+		{
+			EncodingMask = 0;
+			return this;
+		}
+
+		public OptionalFields WithOptionalField<TMember>(Expression<Func<OptionalFields, TMember>> predicate) => WithOptionalField(ExpressionHelper.GetMemberName(predicate.Body));
+
+		public OptionalFields WithOptionalField(string field)
+		{
+			switch (field)
+			{
+				case "OptionalInt32":
+					EncodingMask |= 0b0001;
+					break;
+				case "OptionalStringArray":
+					EncodingMask |= 0b0010;
+					break;
+			}
+			return this;
+		}
+	}
+
+	public partial class AccessRights : ComplexObject 
+	{
+		public uint EncodingMask;
+
+		public override void Encode(IEncoder encoder)
+		{
+			base.Encode(encoder);
+			encoder.WriteUInt32("EncodingMask",EncodingMask);
+			if ((0b0001 & EncodingMask) != 0)
+			{
+				Encoding.Write(encoder,Read, nameof(Read));
+			}
+			if ((0b0010 & EncodingMask) != 0)
+			{
+				Encoding.Write(encoder,Write, nameof(Write));
+			}
+			if ((0b0100 & EncodingMask) != 0)
+			{
+				Encoding.Write(encoder,Execute, nameof(Execute));
+			}
+		}
+
+		public override void Decode(IDecoder decoder)
+		{
+			base.Decode(decoder);
+			EncodingMask = decoder.ReadUInt32("EncodingMask");
+			if ((0b0001 & EncodingMask) != 0)
+			{
+				Encoding.Read(decoder,ref Read, nameof(Read));
+			}
+			if ((0b0010 & EncodingMask) != 0)
+			{
+				Encoding.Read(decoder,ref Write, nameof(Write));
+			}
+			if ((0b0100 & EncodingMask) != 0)
+			{
+				Encoding.Read(decoder,ref Execute, nameof(Execute));
+			}
+		}
+
+		public OptionalFields ResetMask()
+		{
+			EncodingMask = 0;
+			return this;
+		}
+
+		public OptionalFields WithOptionalField<TMember>(Expression<Func<OptionalFields, TMember>> predicate) => WithOptionalField(ExpressionHelper.GetMemberName(predicate.Body));
+
+		public OptionalFields WithOptionalField(string field)
+		{
+			switch (field)
+			{
+				case "Read":
+					EncodingMask |= 0b0001;
+					break;
+				case "Write":
+					EncodingMask |= 0b0010;
+					break;
+				case "Execute":
+					EncodingMask |= 0b0100;
+					break;
+			}
+			return this;
 		}
 	}
 }

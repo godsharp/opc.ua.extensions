@@ -14,7 +14,7 @@ namespace GodSharp.Extensions.Opc.Ua.MsBuild
         {
             try
             {
-                //System.Diagnostics.Debugger.Launch();
+                System.Diagnostics.Debugger.Launch();
                 new FileCodeGenerator().Execute(ProjectPath);
                 return true;
             }

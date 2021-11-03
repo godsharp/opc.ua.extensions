@@ -1,5 +1,7 @@
 ﻿using GodSharp.Extensions.Opc.Ua.Types;
 
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+
 using System.Collections.Generic;
 
 namespace GodSharp.Extensions.Opc.Ua.CodeGenerator
@@ -21,6 +23,7 @@ namespace GodSharp.Extensions.Opc.Ua.CodeGenerator
     public class CodeGeneratorMetadataType
     {
         public string Accessibility { get; set; }
+        public ClassDeclarationSyntax Class { get; set; }
         public string ClassName { get; set; }
         public ComplexObjectType ObjectType { get; set; }
         public EncodingMethodType MethodType { get; set; }
