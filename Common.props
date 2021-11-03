@@ -6,8 +6,8 @@
     <NoWarn>$(NoWarn);1574;1591</NoWarn>
     <DebugSymbols>true</DebugSymbols>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/godsharp/OpcUaExtensions.git</RepositoryUrl>
-    <PackageProjectUrl>https://github.com/godsharp/OpcUaExtensions</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/godsharp/opcua.extensions.git</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/godsharp/opcua.extensions</PackageProjectUrl>
     <PackageIcon>icon.png</PackageIcon>
     <Company>GodSharp</Company>
     <Authors>seayxu</Authors>
