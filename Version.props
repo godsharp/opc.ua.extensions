@@ -4,17 +4,22 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(AssemblyName)'=='GodSharp.Extensions.Opc.Ua'">
     <IsPackable>false</IsPackable>
+    <IsPack>false</IsPack>
     <Version>2021.309.1.0</Version>
 </PropertyGroup>
   <PropertyGroup Condition="'$(AssemblyName)'=='GodSharp.Extensions.Opc.Ua.Client'">
     <IsPackable>false</IsPackable>
+    <IsPack>false</IsPack>
     <Version>2021.309.1.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(AssemblyName)'=='GodSharp.Extensions.Opc.Ua.Generator'">
     <IsPackable>false</IsPackable>
+    <IsPack>false</IsPack>
     <Version>2021.309.1.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(AssemblyName)'=='GodSharp.Extensions.Opc.Ua.CodeGenerator'">
+    <IsPackable>false</IsPackable>
+    <IsPack>false</IsPack>
     <Version>2021.309.1.0</Version>
   </PropertyGroup>
   <PropertyGroup Condition="'$(AssemblyName)'=='GodSharp.Extensions.Opc.Ua.MsBuild'">
