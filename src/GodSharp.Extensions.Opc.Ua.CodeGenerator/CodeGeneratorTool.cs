@@ -84,7 +84,7 @@ namespace GodSharp.Extensions.Opc.Ua.CodeGenerator
             
             if (type.Fields?.Count>0)
             {
-                BuildMethod(builder, type.ObjectType, type.MethodType, type.Fields.ToArray());
+                BuildMethod(builder, $"{type.ClassName}{type.Class.TypeParameterList?.ToString()}", type.ObjectType, type.MethodType, type.Fields.ToArray());
             }
             builder.AppendLine("\t}");
         }
@@ -117,10 +117,11 @@ namespace GodSharp.Extensions.Opc.Ua.CodeGenerator
         /// Build encode and decode method
         /// </summary>
         /// <param name="builder"></param>
+        /// <param name="className"></param>
         /// <param name="objectType"></param>
         /// <param name="methodType"></param>
         /// <param name="fields"></param>
-        public static void BuildMethod(StringBuilder builder, ComplexObjectType objectType, EncodingMethodType methodType, params FieldMetadata[] fields)
+        public static void BuildMethod(StringBuilder builder, string className, ComplexObjectType objectType, EncodingMethodType methodType, params FieldMetadata[] fields)
         {
             BuildEncode(builder, objectType,methodType, fields);
             builder.AppendLine();
@@ -128,7 +129,7 @@ namespace GodSharp.Extensions.Opc.Ua.CodeGenerator
             if(objectType== ComplexObjectType.OptionalField)
             {
                 builder.AppendLine();
-                BuildWithOptionalFields(builder, fields);
+                BuildWithOptionalFields(builder, className, fields);
             }
         }
 
@@ -579,17 +580,17 @@ namespace GodSharp.Extensions.Opc.Ua.CodeGenerator
             }
         }
 
-        private static void BuildWithOptionalFields(StringBuilder builder, params FieldMetadata[] fields)
+        private static void BuildWithOptionalFields(StringBuilder builder, string className, params FieldMetadata[] fields)
         {
-            builder.AppendLine("\t\tpublic OptionalFields ResetMask()");
+            builder.AppendLine($"\t\tpublic {className} ResetMask()");
             builder.AppendLine("\t\t{");
             builder.AppendLine("\t\t\tEncodingMask = 0;");
             builder.AppendLine("\t\t\treturn this;");
             builder.AppendLine("\t\t}");
             builder.AppendLine();
-            builder.AppendLine("\t\tpublic OptionalFields WithOptionalField<TMember>(Expression<Func<OptionalFields, TMember>> predicate) => WithOptionalField(ExpressionHelper.GetMemberName(predicate.Body));");
+            builder.AppendLine($"\t\tpublic {className} WithOptionalField<TMember>(Expression<Func<OptionalFields, TMember>> predicate) => WithOptionalField(ExpressionHelper.GetMemberName(predicate.Body));");
             builder.AppendLine();
-            builder.AppendLine("\t\tpublic OptionalFields WithOptionalField(string field)");
+            builder.AppendLine($"\t\tpublic {className} WithOptionalField(string field)");
             builder.AppendLine("\t\t{");
             builder.AppendLine("\t\t\tswitch (field)");
             builder.AppendLine("\t\t\t{");

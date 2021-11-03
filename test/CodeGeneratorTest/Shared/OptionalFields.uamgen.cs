@@ -113,15 +113,15 @@ namespace CodeGeneratorTest
 			}
 		}
 
-		public OptionalFields ResetMask()
+		public AccessRights ResetMask()
 		{
 			EncodingMask = 0;
 			return this;
 		}
 
-		public OptionalFields WithOptionalField<TMember>(Expression<Func<OptionalFields, TMember>> predicate) => WithOptionalField(ExpressionHelper.GetMemberName(predicate.Body));
+		public AccessRights WithOptionalField<TMember>(Expression<Func<OptionalFields, TMember>> predicate) => WithOptionalField(ExpressionHelper.GetMemberName(predicate.Body));
 
-		public OptionalFields WithOptionalField(string field)
+		public AccessRights WithOptionalField(string field)
 		{
 			switch (field)
 			{
