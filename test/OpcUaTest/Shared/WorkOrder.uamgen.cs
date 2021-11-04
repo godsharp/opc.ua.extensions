@@ -12,7 +12,7 @@ using GodSharp.Extensions.Opc.Ua.Types.Encodings;
 
 namespace OpcUaTest
 {
-	public partial class WorkOrder : ComplexObject
+	public partial class WorkOrder : ComplexObject 
 	{
 		public override void Encode(IEncoder encoder)
 		{
@@ -33,7 +33,7 @@ namespace OpcUaTest
 		}
 	}
 
-	public partial class WorkOrderStatus : ComplexObject
+	public partial class WorkOrderStatus : ComplexObject 
 	{
 		public override void Encode(IEncoder encoder)
 		{

@@ -16,7 +16,7 @@ using System;
 
 namespace OpcUaTest
 {
-	public partial class OptionalFields : ComplexObject
+	public partial class OptionalFields : ComplexObject 
 	{
 		public uint EncodingMask;
 

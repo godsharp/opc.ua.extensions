@@ -11,7 +11,7 @@ using static GodSharp.Extensions.Opc.Ua.Types.Encodings.EncodingFactory;
 
 namespace OpcUaTest
 {
-	public partial class UaAnsiUnion : ComplexObject
+	public partial class UaAnsiUnion : ComplexObject 
 	{
 		public uint SwitchField;
 

@@ -5,6 +5,8 @@ using System.Linq;
 using System.Reflection;
 using GodSharp.Extensions.Opc.Ua.Utilities;
 
+using Opc.Ua;
+
 // ReSharper disable UnusedMember.Global
 // ReSharper disable UnusedMemberInSuper.Global
 // ReSharper disable UnusedType.Global
@@ -21,6 +23,8 @@ namespace GodSharp.Extensions.Opc.Ua.Types.Encodings
         TypeNamespace GetTypeNamespace(Type type);
         TypeNamespace GetTypeNamespace<T>();
         IEncoding<T> GetEncoding<T>();
+        void RegisterEncodeableTypes(params Type[] types);
+        void RegisterEncodeableTypes(params Assembly[] assemblies);
     }
 
     public class EncodingFactory : IEncodingFactory
@@ -156,6 +160,7 @@ namespace GodSharp.Extensions.Opc.Ua.Types.Encodings
             var type = Type.GetType(typeNamespace.Type);
             if(type==null) return;
             _namespaces.TryAdd(type, typeNamespace);
+            EncodeableFactory.GlobalFactory.AddEncodeableType(type);
         }
 
         public TypeNamespace GetTypeNamespace<T>()
@@ -166,6 +171,28 @@ namespace GodSharp.Extensions.Opc.Ua.Types.Encodings
         public TypeNamespace GetTypeNamespace(Type type)
         {
             return _namespaces.TryGetValue(type, out var typeNamespace) ? typeNamespace : null;
+        }
+
+        public void RegisterEncodeableTypes(params Type[] types)
+        {
+            if (types.Length == 0) return;
+
+            foreach (var type in types)
+            {
+                if (type.IsAbstract || !type.IsClass || !type.IsPublic || type.IsGenericType || !type.IsSubclassOf(ComplexObjectType)) return;
+
+                EncodeableFactory.GlobalFactory.AddEncodeableType(type);
+            }
+        }
+
+        public void RegisterEncodeableTypes(params Assembly[] assemblies)
+        {
+            if (assemblies.Length == 0) return;
+
+            foreach (var assembly in assemblies)
+            {
+                RegisterEncodeableTypes(assembly.GetTypes().Where(x => x.IsSubclassOf(ComplexObjectType))?.ToArray());
+            }
         }
     }
 }

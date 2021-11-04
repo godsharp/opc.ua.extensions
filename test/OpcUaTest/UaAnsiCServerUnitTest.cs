@@ -12,6 +12,7 @@ using System.Linq;
 using System.Reflection;
 using System.IO;
 using Opc.Ua.Client.ComplexTypes;
+using GodSharp.Extensions.Opc.Ua.Types;
 
 namespace OpcUaTest
 {
@@ -32,7 +33,15 @@ namespace OpcUaTest
                 typeof(WorkOrder).Assembly
             });
 
-            EncodeableFactory.GlobalFactory.AddEncodeableTypes(typeof(UaAnsiVector).Assembly);
+            // register type namespace
+            EncodingFactory.Instance.RegisterTypeNamespace(
+                new TypeNamespace()
+                {
+                    Type = typeof(UaAnsiVector).AssemblyQualifiedName,
+                    TypeId = "nsu=http://www.unifiedautomation.com/DemoServer/;i=3002",
+                    BinaryEncodingId = "nsu=http://www.unifiedautomation.com/DemoServer/;i=5054"
+                }
+            );
 
             //EncodingFactory.Instance.RegisterTypeNamespace(
             //    new TypeNamespace()
@@ -42,18 +51,21 @@ namespace OpcUaTest
             //        BinaryEncodingId = "nsu=http://www.unifiedautomation.com/DemoServer/;i=5003"
             //    }
             //);
+
+            EncodingFactory.Instance.RegisterEncodeableTypes(Assembly.GetExecutingAssembly());
+
             var opc = new OpcUaSession(_server);
             opc.Connect();
 
-            new ComplexTypeSystem(opc.Session)?.Load().Wait();
+            //new ComplexTypeSystem(opc.Session)?.Load().Wait();
             //OptionalFieldsReadWriteTest(opc.Session);
-            OptionSetReadWriteTest(opc.Session);
+            //OptionSetReadWriteTest(opc.Session);
             //EnumArrayReadWriteTest(opc.Session);
             //EnumReadWriteTest(opc.Session);
             //LongArrayReadWriteTest(opc.Session);
             //GetObjectTypeTest(opc.Session);
 
-            //new UaAnsiCServerRunner(opc, Output.WriteLine).Run();
+            new UaAnsiCServerRunner(opc, Output.WriteLine).Run();
             opc.Disconnect();
         }
 

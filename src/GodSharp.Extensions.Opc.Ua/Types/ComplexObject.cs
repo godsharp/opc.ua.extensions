@@ -9,7 +9,23 @@ namespace GodSharp.Extensions.Opc.Ua.Types
     /// </summary>
     public abstract class ComplexObject : EncodeableObject
     {
-        protected virtual string TypeIdNamespace { get; set; }
+        protected string _TypeIdNamespace;
+        protected virtual string TypeIdNamespace 
+        {
+            get 
+            {
+                if(_TypeIdNamespace == null)
+                {
+                    SetNamespace();
+                }
+                return _TypeIdNamespace;
+            }
+            set
+            {
+                _TypeIdNamespace = value;
+            }
+        }
+
         protected virtual string BinaryEncodingIdNamespace { get; set; }
         protected virtual string XmlEncodingIdNamespace { get; set; }
 
@@ -24,10 +40,10 @@ namespace GodSharp.Extensions.Opc.Ua.Types
         public override ExpandedNodeId BinaryEncodingId
             => ExpandedNodeId.Parse(BinaryEncodingIdNamespace);
 
-        protected ComplexObject()
-        {
-            SetNamespace();
-        }
+        //protected ComplexObject()
+        //{
+        //    SetNamespace();
+        //}
 
         private void SetNamespace()
         {

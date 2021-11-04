@@ -30,17 +30,12 @@ namespace OpcUaTest
         }
     }
 
-    [ComplexObjectGenerator(ComplexObjectType.EncodeableObject, EncodingMethodType.Extension)]
-    public partial class UaAnsiVector : ComplexObject
+    public partial class UaAnsiVector : VectorThree<double>
     {
-        public double X;
-        public double Y;
-        public double Z;
-
         public UaAnsiVector()
         {
-            TypeIdNamespace = "nsu=http://www.unifiedautomation.com/DemoServer/;i=3002";
-            BinaryEncodingIdNamespace = "nsu=http://www.unifiedautomation.com/DemoServer/;i=5054";
+            //TypeIdNamespace = "nsu=http://www.unifiedautomation.com/DemoServer/;i=3002";
+            //BinaryEncodingIdNamespace = "nsu=http://www.unifiedautomation.com/DemoServer/;i=5054";
         }
     }
 }

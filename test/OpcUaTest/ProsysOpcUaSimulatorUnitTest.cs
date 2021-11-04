@@ -5,6 +5,7 @@ using System;
 using CommonTest;
 using Xunit;
 using GodSharp.Extensions.Opc.Ua.Types.Encodings;
+using GodSharp.Extensions.Opc.Ua.Types;
 
 namespace OpcUaTest
 {
@@ -20,7 +21,6 @@ namespace OpcUaTest
                 Assembly.GetEntryAssembly()
             });
 
-            EncodeableFactory.GlobalFactory.AddEncodeableTypes(typeof(ProsysVector).Assembly);
             var opc = new OpcUaSession(_server);
             opc.Connect();
 
