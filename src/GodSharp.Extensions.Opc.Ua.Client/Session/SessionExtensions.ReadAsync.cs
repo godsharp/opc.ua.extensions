@@ -237,5 +237,316 @@ namespace GodSharp.Extensions.Opc.Ua.Client
             if (nodeId == null) throw new ArgumentNullException(nameof(nodeId));
             return session.ReadAsync(new NodeId(nodeId),defaultValue);
         }
+
+        /// <summary>
+        /// Read values with specialized node and range set.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="nodes">the set of <see cref="NodeId"/> and <see cref="NumericRange"/> kv.</param>
+        /// <returns>an set value of <see cref="DataValue"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Task<IEnumerable<DataValue>> ReadAsync(this Session session, IEnumerable<(NodeId Node, NumericRange Range)> nodes)
+        {
+            if (nodes == null) throw new ArgumentNullException(nameof(nodes));
+
+            var nodesToRead = new ReadValueIdCollection(
+                nodes
+                    .Select(x => new ReadValueId
+                    {
+                        NodeId = x.Node,
+                        AttributeId = Attributes.Value,
+                        ParsedIndexRange = x.Range
+                    })
+                );
+            var tcs = new TaskCompletionSource<IEnumerable<DataValue>>();
+
+            session.BeginRead(
+                null,
+                0,
+                TimestampsToReturn.Neither,
+                nodesToRead,
+                ar =>
+                {
+                    try
+                    {
+                        var response = session.EndRead(
+                            ar,
+                            out var results,
+                            out _);
+
+                        if (StatusCode.IsGood(response.ServiceResult)) tcs.TrySetResult(results);
+                        else tcs.TrySetException(new Exception($"async read nodes failed:{response.ServiceResult}"));
+                    }
+                    catch (Exception ex)
+                    {
+                        tcs.TrySetException(ex);
+                    }
+                },
+                null);
+
+            return tcs.Task;
+        }
+
+        /// <summary>
+        /// Read values with specialized node and range set.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="nodes">the set of <see cref="NodeId"/> and <see cref="NumericRange"/> kv.</param>
+        /// <param name="defaultValue">the default value to return when read failed.</param>
+        /// <typeparam name="T">the value type.</typeparam>
+        /// <returns>an set value of <see cref="T"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Task<IEnumerable<T>> ReadAsync<T>(this Session session, IEnumerable<(NodeId Node, NumericRange Range)> nodes, T defaultValue = default)
+        {
+            if (nodes == null) throw new ArgumentNullException(nameof(nodes));
+
+            var nodesToRead = new ReadValueIdCollection(
+                nodes
+                    .Select(x => new ReadValueId
+                    {
+                        NodeId = x.Node,
+                        AttributeId = Attributes.Value,
+                        ParsedIndexRange = x.Range
+                    })
+                );
+            var tcs = new TaskCompletionSource<IEnumerable<T>>();
+
+            session.BeginRead(
+                null,
+                0,
+                TimestampsToReturn.Neither,
+                nodesToRead,
+                ar =>
+                {
+                    try
+                    {
+                        var response = session.EndRead(
+                            ar,
+                            out var results,
+                            out _);
+
+                        if (StatusCode.IsGood(response.ServiceResult)) tcs.TrySetResult(results.Select(x => x.ValueOf(defaultValue)));
+                        else tcs.TrySetException(new Exception($"async read nodes failed:{response.ServiceResult}"));
+                    }
+                    catch (Exception ex)
+                    {
+                        tcs.TrySetException(ex);
+                    }
+                },
+                null);
+
+            return tcs.Task;
+        }
+
+        /// <summary>
+        /// Read values with specialized node and range set.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="nodes">the set of <see cref="string"/> and <see cref="NumericRange"/> kv.</param>
+        /// <returns>an set value of <see cref="DataValue"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Task<IEnumerable<DataValue>> ReadAsync(this Session session, IEnumerable<(string Node, NumericRange Range)> nodes)
+            => session.ReadAsync(nodes?.Select(x => (new NodeId(x.Node), x.Range)));
+
+        /// <summary>
+        /// Read values with specialized node and range set.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="nodes">the set of <see cref="string"/> and <see cref="NumericRange"/> kv.</param>
+        /// <param name="defaultValue">the default value to return when read failed.</param>
+        /// <typeparam name="T">the value type.</typeparam>
+        /// <returns>an set value of <see cref="T"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Task<IEnumerable<T>> ReadAsync<T>(this Session session, IEnumerable<(string Node, NumericRange Range)> nodes, T defaultValue = default)
+            => session.ReadAsync(nodes?.Select(x => (new NodeId(x.Node), x.Range)), defaultValue);
+
+        /// <summary>
+        /// Read values with specialized node and range.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="node">the node of <see cref="NodeId"/>.</param>
+        /// <param name="range">the range of <see cref="NumericRange"/>.</param>
+        /// <returns>an set value of <see cref="DataValue"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Task<IEnumerable<DataValue>> ReadAsync(this Session session, NodeId node, NumericRange range)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            return session.ReadAsync(new[] { (node, range) });
+        }
+
+        /// <summary>
+        /// Read values with specialized node and range.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="node">the node of <see cref="NodeId"/>.</param>
+        /// <param name="range">the range of <see cref="NumericRange"/>.</param>
+        /// <param name="defaultValue">the default value to return when read failed.</param>
+        /// <returns>an set value of <see cref="T"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Task<IEnumerable<T>> ReadAsync<T>(this Session session, NodeId node, NumericRange range, T defaultValue = default)
+            => session.ReadAsync(node, range, defaultValue);
+
+        /// <summary>
+        /// Read values with specialized node and range.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="node">the node of <see cref="string"/>.</param>
+        /// <param name="range">the range of <see cref="NumericRange"/>.</param>
+        /// <returns>an set value of <see cref="DataValue"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Task<IEnumerable<DataValue>> ReadAsync(this Session session, string node, NumericRange range)
+        {
+            if (string.IsNullOrWhiteSpace(node)) throw new ArgumentNullException(nameof(node));
+            return session.ReadAsync(new[] { (new NodeId(node), range) });
+        }
+
+        /// <summary>
+        /// Read values with specialized node and range.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="node">the node of <see cref="string"/>.</param>
+        /// <param name="range">the range of <see cref="NumericRange"/>.</param>
+        /// <param name="defaultValue">the default value to return when read failed.</param>
+        /// <returns>an set value of <see cref="T"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Task<IEnumerable<T>> ReadAsync<T>(this Session session, string node, NumericRange range, T defaultValue = default)
+        {
+            if (string.IsNullOrWhiteSpace(node)) throw new ArgumentNullException(nameof(node));
+            return session.ReadAsync(new NodeId(node), range, defaultValue);
+        }
+
+        /// <summary>
+        /// Read values with specialized node and range.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="node">the node of <see cref="NodeId"/>.</param>
+        /// <param name="offset">the offset of array.</param>
+        /// <param name="size">the size to read,default is -1:read to end.</param>
+        /// <returns>an set value of <see cref="DataValue"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static Task<IEnumerable<DataValue>> ReadAsync(this Session session, NodeId node, int offset, int size = -1)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+
+            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset));
+
+            return session.ReadAsync(new[] { (node, new NumericRange(offset, size < 1 ? -1 : offset + size)) });
+        }
+
+        /// <summary>
+        /// Read values with specialized node and range.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="node">the node of <see cref="NodeId"/>.</param>
+        /// <param name="offset">the offset of array.</param>
+        /// <param name="size">the size to read,default is -1:read to end.</param>
+        /// <param name="defaultValue">the default value to return when read failed.</param>
+        /// <returns>an set value of <see cref="T"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Task<IEnumerable<T>> ReadAsync<T>(this Session session, NodeId node, int offset, int size = -1, T defaultValue = default)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (offset < 0) throw new ArgumentOutOfRangeException(nameof(offset));
+
+            return session.ReadAsync(new[] { (node, new NumericRange(offset, size < 1 ? -1 : offset + size)) }, defaultValue);
+        }
+
+        /// <summary>
+        /// Read values with specialized node and range.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="node">the node of <see cref="string"/>.</param>
+        /// <param name="offset">the offset of array.</param>
+        /// <param name="size">the size to read,default is -1:read to end.</param>
+        /// <returns>an set value of <see cref="DataValue"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Task<IEnumerable<DataValue>> ReadAsync(this Session session, string node, int offset, int size = -1)
+        {
+            if (string.IsNullOrWhiteSpace(node)) throw new ArgumentNullException(nameof(node));
+            return session.ReadAsync(new NodeId(node), offset, size);
+        }
+
+        /// <summary>
+        /// Read values with specialized node and range.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="node">the node of <see cref="string"/>.</param>
+        /// <param name="offset">the offset of array.</param>
+        /// <param name="size">the size to read,default is -1:read to end.</param>
+        /// <param name="defaultValue">the default value to return when read failed.</param>
+        /// <returns>an set value of <see cref="T"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Task<IEnumerable<T>> ReadAsync<T>(this Session session, string node, int offset, int size = -1, T defaultValue = default)
+        {
+            if (string.IsNullOrWhiteSpace(node)) throw new ArgumentNullException(nameof(node));
+            return session.ReadAsync(new NodeId(node), offset, size, defaultValue);
+        }
+
+        /// <summary>
+        /// Read values with specialized node and range.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="node">the node of <see cref="NodeId"/>.</param>
+        /// <param name="indexs">the set of index to read.</param>
+        /// <returns>an set value of <see cref="DataValue"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Task<IEnumerable<DataValue>> ReadAsync(this Session session, NodeId node, int[] indexs)
+        {
+            if (node == null) throw new ArgumentNullException(nameof(node));
+            if (indexs == null) throw new ArgumentNullException(nameof(indexs));
+
+            return session.ReadAsync(new[]
+            {
+                (   node,
+                    new NumericRange()
+                    {
+                        SubRanges = indexs.Select(x => new NumericRange(x, x + 1)).ToArray()
+                    }
+                )
+            });
+        }
+
+        /// <summary>
+        /// Read values with specialized node and range.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="node">the node of <see cref="NodeId"/>.</param>
+        /// <param name="indexs">the set of index to read.</param>
+        /// <param name="defaultValue">the default value to return when read failed.</param>
+        /// <returns>an set value of <see cref="T"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        /// <exception cref="ArgumentOutOfRangeException"></exception>
+        public static Task<IEnumerable<T>> ReadAsync<T>(this Session session, NodeId node, int[] indexs, T defaultValue = default)
+            => session.ReadAsync(new NodeId(node), indexs, defaultValue);
+
+        /// <summary>
+        /// Read values with specialized node and range.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="node">the node of <see cref="string"/>.</param>
+        /// <param name="indexs">the set of index to read.</param>
+        /// <returns>an set value of <see cref="DataValue"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Task<IEnumerable<DataValue>> ReadAsync(this Session session, string node, int[] indexs)
+        {
+            if (string.IsNullOrWhiteSpace(node)) throw new ArgumentNullException(nameof(node));
+            return session.ReadAsync(new NodeId(node), indexs);
+        }
+
+        /// <summary>
+        /// Read values with specialized node and range.
+        /// </summary>
+        /// <param name="session">the <see cref="Session"/> instance.</param>
+        /// <param name="node">the node of <see cref="string"/>.</param>
+        /// <param name="indexs">the set of index to read.</param>
+        /// <param name="defaultValue">the default value to return when read failed.</param>
+        /// <returns>an set value of <see cref="T"/>.</returns>
+        /// <exception cref="ArgumentNullException"></exception>
+        public static Task<IEnumerable<T>> ReadAsync<T>(this Session session, string node, int[] indexs, T defaultValue = default)
+        {
+            if (string.IsNullOrWhiteSpace(node)) throw new ArgumentNullException(nameof(node));
+            return session.ReadAsync(new NodeId(node), indexs, defaultValue);
+        }
     }
 }
