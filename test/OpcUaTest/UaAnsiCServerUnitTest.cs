@@ -64,8 +64,9 @@ namespace OpcUaTest
             //EnumReadWriteTest(opc.Session);
             //LongArrayReadWriteTest(opc.Session);
             //GetObjectTypeTest(opc.Session);
+            LongArrayReadWriteTest2(opc.Session);
 
-            new UaAnsiCServerRunner(opc, Output.WriteLine).Run();
+            //new UaAnsiCServerRunner(opc, Output.WriteLine).Run();
             opc.Disconnect();
         }
 
@@ -126,6 +127,36 @@ namespace OpcUaTest
             Output.WriteLine($"Read {node}={string.Join(",", _values)} {values.SequenceEqual(_values)}");
             Assert.True(values.SequenceEqual(_values));
             Assert.Equal(values, _values);
+        }
+
+        public void LongArrayReadWriteTest2(Session session)
+        {
+            var node = "ns=4;s=Demo.Static.Arrays.Byte";
+            var random = new Random((int)DateTime.Now.Ticks);
+
+            byte b = (byte)random.Next(0, byte.MaxValue);
+            int s = (byte)random.Next(2, 5);
+            var values = Enumerable.Repeat(b, s).ToArray();
+            bool ret;
+            //var ret = session.Write(node, b, 0, s);
+            //Output.WriteLine($"Write {node}={string.Join(",", values)} {ret}");
+            //var _values = session.Read<byte>(node, 0, s);
+            //Output.WriteLine($"Read {node}={string.Join(",", _values)} {values.SequenceEqual(_values)}");
+            //Assert.True(values.SequenceEqual(_values));
+            //Assert.Equal(values, _values);
+
+            var c = random.Next(1, 10);
+            for (int i = 0; i < c; i++)
+            {
+                b = (byte)random.Next(0, byte.MaxValue);
+                var index = random.Next(0, 5);
+                ret = session.Write(node, b, index);
+                Output.WriteLine($"Write {node}[{index}]={b} {ret}");
+                byte _b = session.Read<byte>(node, index, default);
+                Output.WriteLine($"Read {node}=[{index}]={_b} {b == _b}");
+                Assert.True(b == _b);
+                Assert.Equal(b, _b);
+            }
         }
 
         public void OptionalFieldsReadWriteTest(Session session)
