@@ -12,11 +12,11 @@ using System.Threading.Tasks;
 
 namespace OpcUaTest
 {
-    public partial class ProsysOpcUaSimulatorUnitTest : UnitTestBase
+    public partial class OmronOpcUaUnitTest : UnitTestBase
     {
-        private readonly string _server = "opc.tcp://127.0.0.1:53530/OPCUA/SimulationServer";
+        private readonly string _server = "opc.tcp://192.168.250.1:4840";
 
-        public ProsysOpcUaSimulatorUnitTest(ITestOutputHelper outputHelper) : base(outputHelper)
+        public OmronOpcUaUnitTest(ITestOutputHelper outputHelper) : base(outputHelper)
         {
         }
 
@@ -30,9 +30,9 @@ namespace OpcUaTest
 
             var opc = new OpcUaSession(_server);
             opc.Connect();
-            //ByteArrayReadWriteTest_With_Range_Values(opc.Session);
-            //ByteArrayReadWriteTest_With_Index_Range(opc.Session);
-            //ByteArrayReadWriteTest_With_Index_One(opc.Session);
+            ByteArrayReadWriteTest_With_Range_Values(opc.Session);
+            ByteArrayReadWriteTest_With_Index_Range(opc.Session);
+            ByteArrayReadWriteTest_With_Index_One(opc.Session);
             ByteArrayReadWriteTest_With_Index_Multi(opc.Session);
 
             //var node = "ns=3;i=1007";
@@ -74,42 +74,42 @@ namespace OpcUaTest
         public void ByteArrayReadWriteTest_With_Range_Values(Session session)
         {
             Output.WriteLine($"------{MethodBase.GetCurrentMethod().Name}------");
-            var node = "ns=5;s=ByteArray";
-            var _node = new NodeId("ns=5;s=ByteArray");
+            var node = "ns=4;s=GouIntArray";
+            var _node = new NodeId("ns=4;s=GouIntArray");
             var random = new Random((int)DateTime.Now.Ticks);
 
             var count = random.Next(1, 5);
-            var values = new byte[count];
+            var values = new short[count];
             int f = random.Next(0, 3);
-            int s = random.Next(-1, values.Length > 3 ? values.Length - f : values.Length);
+            int s = random.Next(0, 5 - f);
 
             for (int i = 0; i < count; i++)
             {
-                values[i] = (byte)random.Next(byte.MinValue, byte.MaxValue);
+                values[i] = (short)random.Next(short.MinValue, short.MaxValue);
             }
 
             var ret = session.Write(_node, values, f, s);
             values = values.Take(s).ToArray();
             Output.WriteLine($"Write {node}={string.Join(",", values)} {ret}");
-            var _values = session.Read<byte>(_node, f, s);
+            var _values = session.Read<short>(_node, f, s);
             Output.WriteLine($"Read {node}={string.Join(",", _values)} {values.SequenceEqual(_values)}");
             Assert.True(values.SequenceEqual(_values));
             Assert.Equal(values, _values);
 
             count = random.Next(1, 5);
-            values = new byte[count];
+            values = new short[count];
             f = random.Next(0, 3);
-            s = random.Next(-1, values.Length > 3 ? values.Length - f : values.Length);
+            s = random.Next(0, 5 - f);
 
             for (int i = 0; i < count; i++)
             {
-                values[i] = (byte)random.Next(byte.MinValue, byte.MaxValue);
+                values[i] = (short)random.Next(short.MinValue, short.MaxValue);
             }
 
             ret = session.Write(node, values, f, s);
             values = values.Take(s).ToArray();
             Output.WriteLine($"Write {node}={string.Join(",", values)} {ret}");
-            _values = session.Read<byte>(node, f, s);
+            _values = session.Read<short>(node, f, s);
             Output.WriteLine($"Read {node}={string.Join(",", _values)} {values.SequenceEqual(_values)}");
             Assert.True(values.SequenceEqual(_values));
             Assert.Equal(values, _values);
@@ -118,30 +118,30 @@ namespace OpcUaTest
         public void ByteArrayReadWriteTest_With_Index_Range(Session session)
         {
             Output.WriteLine($"------{MethodBase.GetCurrentMethod().Name}------");
-            var node = "ns=5;s=ByteArray";
-            var _node = new NodeId("ns=5;s=ByteArray");
+            var node = "ns=4;s=GouIntArray";
+            var _node = new NodeId("ns=4;s=GouIntArray");
             var random = new Random((int)DateTime.Now.Ticks);
 
-            int f = (byte)random.Next(0, 3);
-            int s = (byte)random.Next(1, 3);
-            var b = (byte)random.Next(0, byte.MaxValue);
+            int f = random.Next(0, 3);
+            int s = random.Next(1, 3);
+            var b = (short)random.Next(short.MinValue, short.MaxValue);
             var values = Enumerable.Repeat(b, s).ToArray();
 
             var ret = session.Write(_node, b, f, s);
             Output.WriteLine($"Write {node}={string.Join(",", values)} {ret}");
-            var _values = session.Read<byte>(_node, f, s);
+            var _values = session.Read<short>(_node, f, s);
             Output.WriteLine($"Read {node}={string.Join(",", _values)} {values.SequenceEqual(_values)}");
             Assert.True(values.SequenceEqual(_values));
             Assert.Equal(values, _values);
 
-            f = (byte)random.Next(0, 3);
-            s = (byte)random.Next(1, 3);
-            b = (byte)random.Next(0, byte.MaxValue);
+            f = random.Next(0, 3);
+            s = random.Next(1, 3);
+            b = (short)random.Next(short.MinValue, short.MaxValue);
             values = Enumerable.Repeat(b, s).ToArray();
 
             ret = session.Write(node, b, f, s);
             Output.WriteLine($"Write {node}={string.Join(",", values)} {ret}");
-            _values = session.Read<byte>(node, f, s);
+            _values = session.Read<short>(node, f, s);
             Output.WriteLine($"Read {node}={string.Join(",", _values)} {values.SequenceEqual(_values)}");
             Assert.True(values.SequenceEqual(_values));
             Assert.Equal(values, _values);
@@ -150,18 +150,18 @@ namespace OpcUaTest
         public void ByteArrayReadWriteTest_With_Index_One(Session session)
         {
             Output.WriteLine($"------{MethodBase.GetCurrentMethod().Name}------");
-            var node = "ns=5;s=ByteArray";
-            var _node = new NodeId("ns=5;s=ByteArray");
+            var node = "ns=4;s=GouIntArray";
+            var _node = new NodeId("ns=4;s=GouIntArray");
             var random = new Random((int)DateTime.Now.Ticks);
 
             var c = random.Next(1, 10);
             for (int i = 0; i < c; i++)
             {
-                var b = (byte)random.Next(0, byte.MaxValue);
+                var b = (short)random.Next(short.MinValue, short.MaxValue);
                 var index = random.Next(0, 5);
                 var ret = session.Write(_node, b, index);
                 Output.WriteLine($"Write {node}[{index}]={b} {ret}");
-                byte _b = session.Read<byte>(_node, index, default);
+                var _b = session.Read<short>(_node, index, default);
                 Output.WriteLine($"Read {node}=[{index}]={_b} {b == _b}");
                 Assert.True(b == _b);
                 Assert.Equal(b, _b);
@@ -170,11 +170,11 @@ namespace OpcUaTest
             c = random.Next(1, 10);
             for (int i = 0; i < c; i++)
             {
-                var b = (byte)random.Next(0, byte.MaxValue);
+                var b = (short)random.Next(short.MinValue, short.MaxValue);
                 var index = random.Next(0, 5);
                 var ret = session.Write(node, b, index);
                 Output.WriteLine($"Write {node}[{index}]={b} {ret}");
-                byte _b = session.Read<byte>(node, index, default);
+                var _b = session.Read<short>(node, index, default);
                 Output.WriteLine($"Read {node}=[{index}]={_b} {b == _b}");
                 Assert.True(b == _b);
                 Assert.Equal(b, _b);
@@ -184,12 +184,12 @@ namespace OpcUaTest
         public void ByteArrayReadWriteTest_With_Index_Multi(Session session)
         {
             Output.WriteLine($"------{MethodBase.GetCurrentMethod().Name}------");
-            var node = "ns=5;s=ByteArray";
-            var _node = new NodeId("ns=5;s=ByteArray");
+            var node = "ns=4;s=GouIntArray";
+            var _node = new NodeId("ns=4;s=GouIntArray");
             var random = new Random((int)DateTime.Now.Ticks);
 
             var count = random.Next(2, 5);
-            byte b = (byte)random.Next(0, byte.MaxValue);
+            short b = (short)random.Next(short.MinValue, short.MaxValue);
             var values = Enumerable.Repeat(b, count).ToArray();
             var indexs = new int[count];
             for (int i = 0; i < count; i++)
@@ -207,13 +207,13 @@ namespace OpcUaTest
 
             var ret = session.Write(_node, b, indexs);
             Output.WriteLine($"Write {node}={string.Join(",", values)} {ret}");
-            var _values = session.Read<byte>(_node, indexs);
+            var _values = session.Read<short>(_node, indexs);
             Output.WriteLine($"Read {node}={string.Join(",", _values)} {values.SequenceEqual(_values)}");
             Assert.True(values.SequenceEqual(_values));
             Assert.Equal(values, _values);
 
             count = random.Next(2, 5);
-            b = (byte)random.Next(0, byte.MaxValue);
+            b = (short)random.Next(0, short.MaxValue);
             values = Enumerable.Repeat(b, count).ToArray();
             indexs = new int[count];
             for (int i = 0; i < count; i++)
@@ -231,7 +231,7 @@ namespace OpcUaTest
 
             ret = session.Write(node, b, indexs);
             Output.WriteLine($"Write {node}={string.Join(",", values)} {ret}");
-            _values = session.Read<byte>(node, indexs);
+            _values = session.Read<short>(node, indexs);
             Output.WriteLine($"Read {node}={string.Join(",", _values)} {values.SequenceEqual(_values)}");
             Assert.True(values.SequenceEqual(_values));
             Assert.Equal(values, _values);
@@ -239,8 +239,8 @@ namespace OpcUaTest
 
         public async Task ByteArrayReadWriteTest_With_Index_Range_Async(Session session)
         {
-            var node = "ns=5;s=ByteArray";
-            var _node = new NodeId("ns=5;s=ByteArray");
+            var node = "ns=4;s=GouIntArray";
+            var _node = new NodeId("ns=4;s=GouIntArray");
             var random = new Random((int)DateTime.Now.Ticks);
 
             byte b = (byte)random.Next(0, byte.MaxValue);
@@ -268,8 +268,8 @@ namespace OpcUaTest
 
         public async Task ByteArrayReadWriteTest_With_Index_One_Async(Session session)
         {
-            var node = "ns=5;s=ByteArray";
-            var _node = new NodeId("ns=5;s=ByteArray");
+            var node = "ns=4;s=GouIntArray";
+            var _node = new NodeId("ns=4;s=GouIntArray");
             var random = new Random((int)DateTime.Now.Ticks);
 
             var c = random.Next(1, 10);

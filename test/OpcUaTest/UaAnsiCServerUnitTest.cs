@@ -14,11 +14,12 @@ using System.IO;
 using Opc.Ua.Client.ComplexTypes;
 using GodSharp.Extensions.Opc.Ua.Types;
 
+
 namespace OpcUaTest
 {
     public class UaAnsiCServerUnitTest : UnitTestBase
     {
-        private readonly string _server = "opc.tcp://GodSharp:48020";
+        private readonly string _server = "opc.tcp://127.0.0.1:48020";
 
         public UaAnsiCServerUnitTest(ITestOutputHelper outputHelper):base(outputHelper)
         {
@@ -57,6 +58,13 @@ namespace OpcUaTest
             var opc = new OpcUaSession(_server);
             opc.Connect();
 
+            for (int i = 0; i < 5; i++)
+            {
+                var node = "ns=4;s=Demo.Static.Arrays.Int32";
+                var v = opc.Session.Read<int>($"{node}",i,default);
+                Output.WriteLine($"[{i}]:{v}");
+            }
+
             //new ComplexTypeSystem(opc.Session)?.Load().Wait();
             //OptionalFieldsReadWriteTest(opc.Session);
             //OptionSetReadWriteTest(opc.Session);
@@ -64,7 +72,7 @@ namespace OpcUaTest
             //EnumReadWriteTest(opc.Session);
             //LongArrayReadWriteTest(opc.Session);
             //GetObjectTypeTest(opc.Session);
-            LongArrayReadWriteTest2(opc.Session);
+            //LongArrayReadWriteTest2(opc.Session);
 
             //new UaAnsiCServerRunner(opc, Output.WriteLine).Run();
             opc.Disconnect();
