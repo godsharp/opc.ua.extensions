@@ -1,8 +1,10 @@
-﻿using System;
+﻿using Opc.Ua;
+using Opc.Ua.Client;
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using Opc.Ua;
-using Opc.Ua.Client;
+
 // ReSharper disable CheckNamespace
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -65,7 +67,7 @@ namespace GodSharp.Extensions.Opc.Ua.Client
                 var item = new MonitoredItem(subscription.DefaultItem)
                 {
                     DisplayName = subscription.Session.NodeCache.GetDisplayText(node),
-                    StartNodeId = (NodeId) node.NodeId,
+                    StartNodeId = (NodeId)node.NodeId,
                     NodeClass = node.NodeClass,
                     SamplingInterval = samplingInterval,
                     AttributeId = Attributes.Value
@@ -79,12 +81,12 @@ namespace GodSharp.Extensions.Opc.Ua.Client
                 subscription.ApplyChanges();
                 return true;
             }
-            
+
             session.AddSubscription(subscription);
             subscription.Create();
             return true;
         }
-        
+
         /// <summary>
         /// Subscribe nodes with specialized parameters
         /// </summary>
@@ -106,7 +108,7 @@ namespace GodSharp.Extensions.Opc.Ua.Client
         {
             var items = nodes?.ToArray();
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
-            if (nodes==null || !items.Any()) throw new ArgumentNullException(nameof(nodes));
+            if (nodes == null || !items.Any()) throw new ArgumentNullException(nameof(nodes));
             if (notificationHandler == null) throw new ArgumentNullException(nameof(notificationHandler));
             var subscription = session.Subscriptions?.FirstOrDefault(x => name.Equals(x.DisplayName, StringComparison.OrdinalIgnoreCase));
 
@@ -139,7 +141,7 @@ namespace GodSharp.Extensions.Opc.Ua.Client
                     DisplayName = node.Identifier.ToString(),
                     StartNodeId = node,
                     SamplingInterval = samplingInterval,
-                    NodeClass=NodeClass.Variable,
+                    NodeClass = NodeClass.Variable,
                     AttributeId = Attributes.Value
                 };
                 item.Notification += (mi, args) => notificationHandler(name, mi, args);
@@ -164,9 +166,9 @@ namespace GodSharp.Extensions.Opc.Ua.Client
                 }
                 return false;
             }
-            
+
             subscription.Create();
-            
+
             return subscription.Created && subscription.Id > 0;
         }
 
@@ -210,18 +212,18 @@ namespace GodSharp.Extensions.Opc.Ua.Client
         /// <param name="nodes">the set of <see cref="MonitoredItem"/> node id.</param>
         /// <returns>a <see cref="bool"/> value.</returns>
         /// <exception cref="ArgumentNullException"></exception>
-        public static bool Unsubscribe(this Session session, string name,IEnumerable<string> nodes)
+        public static bool Unsubscribe(this Session session, string name, params string[] nodes)
         {
-            var names = nodes?.ToArray();
+            var names = nodes;
             if (string.IsNullOrWhiteSpace(name)) throw new ArgumentNullException(nameof(name));
-            if (nodes==null || !names.Any()) throw new ArgumentNullException(nameof(nodes));
+            if (nodes == null || !names.Any()) throw new ArgumentNullException(nameof(nodes));
             var subscription = session.Subscriptions?.FirstOrDefault(x => name.Equals(x.DisplayName, StringComparison.OrdinalIgnoreCase));
 
             var items = subscription?.MonitoredItems?.Where(
                 x => names.Any(
-                    a => x.DisplayName==a || (x.StartNodeId.IdType== IdType.String && x.StartNodeId.Identifier?.ToString() == a))
+                    a => x.DisplayName == a || (x.StartNodeId.IdType == IdType.String && x.StartNodeId.Identifier?.ToString() == a))
                 ).ToArray();
-            
+
             if (items == null || !items.Any()) return false;
             subscription.RemoveItems(items);
             subscription.ApplyChanges();

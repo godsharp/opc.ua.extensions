@@ -1,9 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using GodSharp.Extensions.Opc.Ua.Types.Encodings;
+﻿using GodSharp.Extensions.Opc.Ua.Types.Encodings;
+
 using Opc.Ua;
 using Opc.Ua.Client;
+
+using System;
+using System.Linq;
+
 // ReSharper disable UnusedAutoPropertyAccessor.Global
 // ReSharper disable CheckNamespace
 // ReSharper disable BitwiseOperatorOnEnumWithoutFlags
@@ -42,7 +44,7 @@ namespace GodSharp.Extensions.Opc.Ua.Client
                 BrowseDirection = direction,
                 ReferenceTypeId = referenceTypeId ?? ReferenceTypeIds.Organizes,
                 IncludeSubtypes = includeSubtype,
-                NodeClassMask = nodeClassMask ?? (int) (NodeClass.Object | NodeClass.Variable | NodeClass.Method)
+                NodeClassMask = nodeClassMask ?? (int)(NodeClass.Object | NodeClass.Variable | NodeClass.Method)
             };
 
             return browser.Browse(nod);
@@ -59,7 +61,7 @@ namespace GodSharp.Extensions.Opc.Ua.Client
         /// <param name="includeSubtype"></param>
         /// <param name="nodeClassMask">Default is : (int) (NodeClass.Variable | NodeClass.Object | NodeClass.Method)</param>
         /// <returns></returns>
-        public static IEnumerable<ReferenceBrowseDescription> BrowseTree(
+        public static ReferenceBrowseDescription[] BrowseTree(
             this Session session,
             NodeId node = null,
             int depth = -1,
@@ -76,11 +78,11 @@ namespace GodSharp.Extensions.Opc.Ua.Client
                 direction,
                 referenceTypeId ?? ReferenceTypeIds.HierarchicalReferences,
                 includeSubtype,
-                nodeClassMask ?? (int) (NodeClass.Variable | NodeClass.Object | NodeClass.Method)
+                nodeClassMask ?? (int)(NodeClass.Variable | NodeClass.Object | NodeClass.Method)
             );
         }
 
-        private static IEnumerable<ReferenceBrowseDescription> BrowseTree(
+        private static ReferenceBrowseDescription[] BrowseTree(
             Session session,
             NodeId node,
             int current,
@@ -102,24 +104,31 @@ namespace GodSharp.Extensions.Opc.Ua.Client
                 NodeClassMask = nodeClassMask // (int) (NodeClass.Variable | NodeClass.Object | NodeClass.Method)
             };
 
-            var refs = browser.Browse(node);
+            try
+            {
+                var refs = browser.Browse(node);
 
-            return refs
-                ?.Select(rd => new ReferenceBrowseDescription(
-                        rd,
-                        BrowseTree(
-                            session,
-                            (NodeId) rd.NodeId,
-                            current,
-                            depth,
-                            direction,
-                            referenceTypeId,
-                            includeSubtype,
-                            nodeClassMask
-                        ),
-                        current++
-                    )
-                );
+                return refs
+                    ?.Select(rd => new ReferenceBrowseDescription(
+                            rd,
+                            BrowseTree(
+                                session,
+                                (NodeId)rd.NodeId,
+                                current,
+                                depth,
+                                direction,
+                                referenceTypeId,
+                                includeSubtype,
+                                nodeClassMask
+                            ),
+                            current++
+                        )
+                    ).ToArray();
+            }
+            catch (Exception)
+            {
+                return null;
+            }
         }
     }
 
@@ -127,9 +136,9 @@ namespace GodSharp.Extensions.Opc.Ua.Client
     {
         public ReferenceDescription Node { get; }
         public int Depth { get; }
-        public IEnumerable<ReferenceBrowseDescription> Children { get; }
+        public ReferenceBrowseDescription[] Children { get; }
 
-        public ReferenceBrowseDescription(ReferenceDescription node, IEnumerable<ReferenceBrowseDescription> children, int depth = 0)
+        public ReferenceBrowseDescription(ReferenceDescription node, ReferenceBrowseDescription[] children, int depth = 0)
         {
             Node = node ?? throw new ArgumentNullException(nameof(node));
             Children = children;
@@ -140,6 +149,7 @@ namespace GodSharp.Extensions.Opc.Ua.Client
     public static class ReferenceBrowseDescriptionExtensions
     {
         public static string GetFormatText(this ReferenceDescription description) => Formatter.FormatReferenceDescriptionText(description);
+
         public static string GetFormatText(this ReferenceBrowseDescription description) => description.Node?.GetFormatText();
     }
 }
