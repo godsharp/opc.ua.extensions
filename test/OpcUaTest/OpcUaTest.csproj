@@ -25,7 +25,7 @@
     <ProjectReference Include="..\..\src\GodSharp.Extensions.Opc.Ua.CodeGenerator\GodSharp.Extensions.Opc.Ua.CodeGenerator.csproj" />
     <ProjectReference Include="..\..\src\GodSharp.Extensions.Opc.Ua.Generator\GodSharp.Extensions.Opc.Ua.Generator.csproj" />
     <ProjectReference Include="..\CommonTest\CommonTest.csproj" />
-    <ProjectReference Include="..\..\src\GodSharp.Extensions.Opc.Ua.MsBuild\GodSharp.Extensions.Opc.Ua.MsBuild.csproj" PrivateAssets="All" />
+    <!--<ProjectReference Include="..\..\src\GodSharp.Extensions.Opc.Ua.MsBuild\GodSharp.Extensions.Opc.Ua.MsBuild.csproj" PrivateAssets="All" />-->
   </ItemGroup>
   
   <ItemGroup>
@@ -34,8 +34,8 @@
     </None>
   </ItemGroup>
   
-  <Import Condition="('$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461') AND Exists('..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\net46\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets')" Project="..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\net46\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets" />
+  <!--<Import Condition="('$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net461') AND Exists('..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\net46\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets')" Project="..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\net46\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets" />
   <Import Condition="'$(TargetFramework)'=='net48' AND Exists('..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\net472\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets')" Project="..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\net472\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets" />
-  <Import Condition="('$(TargetFramework)'=='net5.0' OR '$(TargetFramework)'=='netcoreapp3.1') AND Exists('..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\netstandard2.0\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets')" Project="..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\netstandard2.0\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets" />
+  <Import Condition="('$(TargetFramework)'=='net5.0' OR '$(TargetFramework)'=='netcoreapp3.1') AND Exists('..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\netstandard2.0\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets')" Project="..\..\output\GodSharp.Extensions.Opc.Ua.MsBuild\netstandard2.0\build\GodSharp.Extensions.Opc.Ua.MsBuild.targets" />-->
 
 </Project>

@@ -4,6 +4,7 @@ using Opc.Ua;
 using Opc.Ua.Client;
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 // ReSharper disable UnusedAutoPropertyAccessor.Global
@@ -61,7 +62,7 @@ namespace GodSharp.Extensions.Opc.Ua.Client
         /// <param name="includeSubtype"></param>
         /// <param name="nodeClassMask">Default is : (int) (NodeClass.Variable | NodeClass.Object | NodeClass.Method)</param>
         /// <returns></returns>
-        public static ReferenceBrowseDescription[] BrowseTree(
+        public static IEnumerable<ReferenceBrowseDescription> BrowseTree(
             this Session session,
             NodeId node = null,
             int depth = -1,
@@ -82,7 +83,7 @@ namespace GodSharp.Extensions.Opc.Ua.Client
             );
         }
 
-        private static ReferenceBrowseDescription[] BrowseTree(
+        private static IEnumerable<ReferenceBrowseDescription> BrowseTree(
             Session session,
             NodeId node,
             int current,
@@ -93,7 +94,7 @@ namespace GodSharp.Extensions.Opc.Ua.Client
             int nodeClassMask
         )
         {
-            if (depth > -1 && depth <= current) return null;
+            if (depth > 0 && depth <= current) return null;
 
             var browser = new Browser(session)
             {
@@ -103,32 +104,32 @@ namespace GodSharp.Extensions.Opc.Ua.Client
                 //NodeClassMask =  (int)BrowseResultMask.All
                 NodeClassMask = nodeClassMask // (int) (NodeClass.Variable | NodeClass.Object | NodeClass.Method)
             };
-
+            ReferenceDescriptionCollection collection = null;
             try
             {
-                var refs = browser.Browse(node);
-
-                return refs
-                    ?.Select(rd => new ReferenceBrowseDescription(
-                            rd,
-                            BrowseTree(
-                                session,
-                                (NodeId)rd.NodeId,
-                                current,
-                                depth,
-                                direction,
-                                referenceTypeId,
-                                includeSubtype,
-                                nodeClassMask
-                            ),
-                            current++
-                        )
-                    ).ToArray();
+                collection = browser.Browse(node);
             }
-            catch (Exception)
+            catch (ServiceResultException)
             {
-                return null;
+                collection = null;
             }
+
+            var tmp = current + 1;
+            return collection?.Select(rd => new ReferenceBrowseDescription(
+                        rd,
+                        BrowseTree(
+                            session,
+                            (NodeId)rd.NodeId,
+                            tmp,
+                            depth,
+                            direction,
+                            referenceTypeId,
+                            includeSubtype,
+                            nodeClassMask
+                        ),
+                        current
+                    )
+                );
         }
     }
 
@@ -136,9 +137,9 @@ namespace GodSharp.Extensions.Opc.Ua.Client
     {
         public ReferenceDescription Node { get; }
         public int Depth { get; }
-        public ReferenceBrowseDescription[] Children { get; }
+        public IEnumerable<ReferenceBrowseDescription> Children { get; }
 
-        public ReferenceBrowseDescription(ReferenceDescription node, ReferenceBrowseDescription[] children, int depth = 0)
+        public ReferenceBrowseDescription(ReferenceDescription node, IEnumerable<ReferenceBrowseDescription> children, int depth = 0)
         {
             Node = node ?? throw new ArgumentNullException(nameof(node));
             Children = children;
